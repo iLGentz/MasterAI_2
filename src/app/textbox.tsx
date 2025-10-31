@@ -5,7 +5,7 @@ import { useRef, useState } from "react";
 import { useEffect } from "react";
 import { textareaClasses, buttonClasses, containerClasses, buttonClassesX } from "../styles/components";
 import { send } from "process";
-const ai = new GoogleGenAI({ apiKey: "AIzaSyCULxtrZWIXbg0YZ35JmyMwf8PsBU9Fbvw" });
+const ai = new GoogleGenAI({ apiKey: "AIzaSyCULxtrZWIXbg0YZ35JmyMwf8PsBU9Fbvww" });
 
 export default function PromptAI() {
     const [text, setText] = useState('');
