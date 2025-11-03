@@ -1,11 +1,12 @@
 'use client'
 
+import { LuSpeech } from 'react-icons/lu';
 import { GoogleGenAI } from "@google/genai";
 import { useRef, useState } from "react";
 import { useEffect } from "react";
 import { textareaClasses, buttonClasses, containerClasses, buttonClassesX } from "../styles/components";
 import { send } from "process";
-const ai = new GoogleGenAI({ apiKey: "AIzaSyCULxtrZWIXbg0YZ35JmyMwf8PsBU9Fbvww" });
+const ai = new GoogleGenAI({ apiKey: "AIzaSyCULxtrZWIXbg0YZ35JmyMwf8PsBU9Fbvw" });
 
 export default function PromptAI() {
     const [text, setText] = useState('');
@@ -27,14 +28,12 @@ export default function PromptAI() {
         //if (isLoading) return;
         setIsLoading(true);
 
-        console.log("this is text 1: " + text);
 
         try {
             const result = await ai.models.generateContent({
                 model: "gemini-2.5-flash",
                 contents: text
             });
-            console.log("this is text 2: " + text);
 
             setResponse(result.text || 'No response received');
         }
@@ -52,6 +51,14 @@ export default function PromptAI() {
         textarea.style.height = `${textarea.scrollHeight}px`;
         setText(e.target.value);
     };
+
+    const readResponse = () => {
+        if ('speechSynthesis' in window) {
+            const toRead = new SpeechSynthesisUtterance(response);
+            speechSynthesis.speak(toRead);
+        }
+        console.log("Reading response: " + response);
+    }
 
 
     // Aggiungo listener per la scorciatoia Ctrl + Invio
@@ -108,14 +115,25 @@ export default function PromptAI() {
                 <label className={containerClasses.label}>
                     Response by Gemini:
                     <br />
-                    <textarea
-                        ref={responseRef}
-                        id="responseBox"
-                        value={response}
-                        readOnly
-                        className={`${textareaClasses.response} ${textareaClasses.default}`}
-                        style={{ resize: 'none' }}
-                    />
+                    <div className="relative">{/* container relative per posizionare il bottone dentro la textarea */}
+                        <textarea
+                            ref={responseRef}
+                            id="responseBox"
+                            value={response}
+                            readOnly
+                            className={`${textareaClasses.response} ${textareaClasses.default}`}
+                            style={{ resize: 'none' }}
+                        />
+
+                        {/* Bottone posizionato dentro la textarea, usa le stesse classi del tasto X per dimensione */}
+                        <button
+                            className={`${buttonClassesX.speech} absolute right-2 top-2`}
+                            onClick={() => readResponse()}
+                            aria-label="Read response"
+                        >
+                            <LuSpeech />
+                        </button>
+                    </div>
                 </label>
             </div>
         </>
